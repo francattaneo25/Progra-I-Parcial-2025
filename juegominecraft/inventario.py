@@ -1,0 +1,1 @@
+#Objetos que ya vanb a estar en el inventario y sirve para guardar objetos (matriz para guardar objetos)

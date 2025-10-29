@@ -1,0 +1,1 @@
+#madera, metal, palo, pico, espada, blablabla

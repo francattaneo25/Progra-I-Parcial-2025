@@ -1,37 +1,82 @@
 import pygame
+import sys
+from jugador import seleccionar_usuario
 
-pygame.init()
+def dibujar_boton(pantalla, texto, rect, fuente, imagen_boton, mouse_pos):
+
+    boton_img = pygame.transform.scale(imagen_boton, (rect.width, rect.height))
+
+    if rect.collidepoint(mouse_pos):
+        boton_img.set_alpha(255)
+    else:
+        boton_img.set_alpha(180)
+
+    pantalla.blit(boton_img, rect.topleft)
+
+    texto_render = fuente.render(texto, True, (255, 255, 255))
+    texto_rect = texto_render.get_rect(center=rect.center)
+    pantalla.blit(texto_render, texto_rect)
 
 
-ANCHO = 960
-ALTO = 540
-pantalla = pygame.display.set_mode((ANCHO, ALTO))
-pygame.display.set_caption("Fabricación en Minecraft")
+def main():
+    pygame.init()
+    pygame.mixer.init()
+    ancho, alto = 800, 600
+    pantalla = pygame.display.set_mode((ancho, alto))
+    pygame.display.set_caption("Minecraft Construction Tool")
+    fuente = pygame.font.SysFont("Minecraft", 20)
+
+    boton_jugar = pygame.Rect(ancho // 2 - 150, 350, 300, 60)
+    boton_opciones = pygame.Rect(ancho // 2 - 150, 430, 300, 60)
+    boton_salir = pygame.Rect(ancho // 2 - 150, 510, 300, 60)
 
 
-fondo = pygame.image.load("fondo.png")
-fondo = pygame.transform.scale(fondo, (ANCHO, ALTO))  # El fondo ocupa toda la pantalla
+    fondo = pygame.image.load("Progra-I-Parcial-2025\juegominecraft\\fondojuegominecraft.png")
+    fondo = pygame.transform.scale(fondo, (800, 600))
 
-tablero = pygame.image.load("Tablero.png")
+    imagen_boton = pygame.image.load("Progra-I-Parcial-2025/juegominecraft/boton.png").convert_alpha()
 
-tablero = pygame.transform.scale(tablero, (330, 330))  # Podés ajustar los valores
+    pygame.mixer.music.load("Progra-I-Parcial-2025\juegominecraft\MINECRAFT MENU MUSIC.mp3")
+    pygame.mixer.music.play(-1)
 
+    titulo = pygame.image.load("Progra-I-Parcial-2025\juegominecraft\Minecraft-Logo-2013.png")
+    titulo = pygame.transform.scale(titulo, (610, 350))
+    rect_titulo = titulo.get_rect()
+    rect_titulo.centerx = ancho // 2
+    rect_titulo.top = 20
 
-x_tablero = 330
-y_tablero = 120
+    reloj = pygame.time.Clock()
 
-ejecutando = True
-while ejecutando:
-    for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
-            ejecutando = False
+    slots_usuarios = ["", "", ""]
 
-    pantalla.blit(fondo, (0, 0))               
-    pantalla.blit(tablero, (x_tablero, y_tablero))  
+    while True:
+        mouse_pos = pygame.mouse.get_pos()
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif evento.type == pygame.MOUSEBUTTONDOWN:
+                if boton_jugar.collidepoint(mouse_pos):
+                    nombre_usuario = seleccionar_usuario(slots_usuarios)
+                    print(f"Usuario seleccionado: {nombre_usuario}")
+                elif boton_opciones.collidepoint(mouse_pos):
+                    print("Opciones...")
+                elif boton_salir.collidepoint(mouse_pos):
+                    pygame.quit()
+                    sys.exit()
 
-    pygame.display.update()
+        pantalla.blit(fondo, [0, 0])
+        pantalla.blit(titulo, rect_titulo)
 
-pygame.quit()
+        dibujar_boton(pantalla, "JUGAR", boton_jugar, fuente, imagen_boton, mouse_pos)
+        dibujar_boton(pantalla, "OPCIONES", boton_opciones, fuente, imagen_boton, mouse_pos)
+        dibujar_boton(pantalla, "SALIR", boton_salir, fuente, imagen_boton, mouse_pos)
+
+        pygame.display.flip()
+        reloj.tick(60)  # 60 FPS
+
+if __name__ == "__main__":
+    main()
 
 
 

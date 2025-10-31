@@ -65,7 +65,7 @@ def seleccionar_usuario(slots):
         pantalla.fill((0, 0, 0))
 
         for i, rect in enumerate(botones_slots):
-            texto = slots[i] if slots[i] != "" else "(vacio) - click para crear"
+            texto = slots[i]  if slots[i] != "" else "(vacio) - click para crear"
             dibujar_boton(pantalla, texto, rect, fuente, (50, 50, 50), (100, 100, 100), mouse_pos)
 
         if estado_input:

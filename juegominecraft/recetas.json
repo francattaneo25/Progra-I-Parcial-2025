@@ -1,0 +1,97 @@
+{
+    "mesa": [
+        ["madera", "madera", "madera"],
+        ["madera", "madera", "madera"],
+        ["madera", "madera", "madera"]
+    ],
+
+    "manzana_dorada": [
+        [null, null, null],
+        [null, "oro", null],
+        [null, null, "manzana"]
+    ],
+
+    "espada": [
+        ["diamante", null, null],
+        [null, "madera", null],
+        [null, null, "madera"]
+    ],
+
+    "amuleto": [
+        ["oro", "oro", "oro"],
+        ["oro", "manzana", "oro"],
+        ["oro", "oro", "oro"]
+    ],
+
+    "bloque_poder": [
+        ["diamante", null, "diamante"],
+        [null, "oro", null],
+        ["diamante", null, "diamante"]
+    ],
+
+    "pico": [
+        ["diamante", "diamante", "diamante"],
+        [null, "madera", null],
+        [null, "madera", null]
+    ],
+
+    "hacha": [
+        ["diamante", "diamante", null],
+        ["diamante", "madera", null],
+        [null, "madera", null]
+    ],
+
+    "pala": [
+        [null, "diamante", null],
+        [null, "madera", null],
+        [null, "madera", null]
+    ],
+
+    "horno": [
+        ["piedra", "piedra", "piedra"],
+        ["piedra", null, "piedra"],
+        ["piedra", "piedra", "piedra"]
+    ],
+
+    "antorcha": [
+        [null, null, null],
+        [null, "carbon", null],
+        [null, "madera", null]
+    ],
+
+    "escudo": [
+        [null, "madera", null],
+        ["madera", "hierro", "madera"],
+        [null, "madera", null]
+    ],
+
+    "yelmo": [
+        ["hierro", "hierro", "hierro"],
+        ["hierro", null, "hierro"],
+        [null, null, null]
+    ],
+
+    "pechera": [
+        ["hierro", null, "hierro"],
+        ["hierro", "hierro", "hierro"],
+        ["hierro", "hierro", "hierro"]
+    ],
+
+    "botas": [
+        ["hierro", null, "hierro"],
+        ["hierro", null, "hierro"],
+        [null, null, null]
+    ],
+
+    "bloque_oro": [
+        ["oro", "oro", "oro"],
+        ["oro", "oro", "oro"],
+        ["oro", "oro", "oro"]
+    ],
+
+    "bloque_diamante": [
+        ["diamante", "diamante", "diamante"],
+        ["diamante", "diamante", "diamante"],
+        ["diamante", "diamante", "diamante"]
+    ]
+}

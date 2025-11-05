@@ -16,6 +16,8 @@ def seleccionar_usuario(slots):
 
     reloj = pygame.time.Clock()
     mouse_pos = (0, 0)
+    fondo = pygame.image.load("juegominecraft\Dirt_background_BE1.png").convert()
+    fondo = pygame.transform.scale(fondo, (800, 600))
 
     botones_slots = []
     ancho_btn, alto_btn = 400, 60
@@ -62,7 +64,7 @@ def seleccionar_usuario(slots):
                             else:
                                 return slots[i]
 
-        pantalla.fill((0, 0, 0))
+        pantalla.blit(fondo, (0, 0))
 
         for i, rect in enumerate(botones_slots):
             texto = slots[i]  if slots[i] != "" else "(vacio) - click para crear"

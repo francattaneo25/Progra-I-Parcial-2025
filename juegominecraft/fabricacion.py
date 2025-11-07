@@ -19,7 +19,7 @@ def pantalla_fabricacion(pantalla):
     reloj = pygame.time.Clock()
 
     # 🔹 Cargar imagen del tablero
-    tablero_img = pygame.image.load("juegominecraft\Tablero.png").convert_alpha()
+    tablero_img = pygame.image.load("Tablero.png").convert_alpha()
     ancho_tablero, alto_tablero = 500, 520
     tablero_img = pygame.transform.scale(tablero_img, (ancho_tablero, alto_tablero))
 

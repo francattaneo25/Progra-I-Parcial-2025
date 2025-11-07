@@ -31,15 +31,15 @@ def main():
     boton_salir = pygame.Rect(ancho // 2 - 150, 510, 300, 60)
 
 
-    fondo = pygame.image.load("juegominecraft\\fondojuegominecraft.png")
+    fondo = pygame.image.load("fondojuegominecraft.png")
     fondo = pygame.transform.scale(fondo, (800, 600))
 
-    imagen_boton = pygame.image.load("juegominecraft\\boton.png").convert_alpha()
+    imagen_boton = pygame.image.load("boton.png").convert_alpha()
 
-    pygame.mixer.music.load(r"juegominecraft\\MINECRAFT MENU MUSIC.mp3")
+    pygame.mixer.music.load(r"MINECRAFT MENU MUSIC.mp3")
     pygame.mixer.music.play(-1)
 
-    titulo = pygame.image.load("juegominecraft\Minecraft-Logo-2013.png")
+    titulo = pygame.image.load("Minecraft-Logo-2013.png")
     titulo = pygame.transform.scale(titulo, (610, 350))
     rect_titulo = titulo.get_rect()
     rect_titulo.centerx = ancho // 2

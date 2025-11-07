@@ -13,3 +13,4 @@ OBJETOS = {
     "manzana_dorada": {"sprite": cargar_sprite("juegominecraft\objetos sprites\goldenapple.png"), "tipo": "comida"},
     # etc.
 }
+

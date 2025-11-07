@@ -16,7 +16,7 @@ def seleccionar_usuario(slots):
 
     reloj = pygame.time.Clock()
     mouse_pos = (0, 0)
-    fondo = pygame.image.load("Dirt_background_BE1.png").convert()
+    fondo = pygame.image.load("juegominecraft/botones y fondos/Dirt_background_BE1.png").convert()
     fondo = pygame.transform.scale(fondo, (800, 600))
 
     botones_slots = []

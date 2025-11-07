@@ -19,7 +19,7 @@ def pantalla_fabricacion(pantalla):
     reloj = pygame.time.Clock()
 
     # 🔹 Cargar imagen del tablero
-    tablero_img = pygame.image.load("Tablero.png").convert_alpha()
+    tablero_img = pygame.image.load("juegominecraft\\botones y fondos\Tablero.png").convert_alpha()
     ancho_tablero, alto_tablero = 500, 520
     tablero_img = pygame.transform.scale(tablero_img, (ancho_tablero, alto_tablero))
 
@@ -66,10 +66,9 @@ recetas = cargar_recetas_desde_json("juegominecraft\\recetas.json")
 
 # === FUNCIÓN PARA FABRICAR ===
 def fabricar_objeto(nombre_objeto: str):
-    """Devuelve el objeto (sprite) correspondiente a su nombre."""
     objeto = OBJETOS.get(nombre_objeto)
     if objeto:
-        return objeto.imagen
+        return objeto["sprite"]
     return None
 
 

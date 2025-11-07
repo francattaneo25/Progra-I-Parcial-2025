@@ -1,5 +1,6 @@
 import pygame
 import json
+from inventario import matriz_inventario
 from objetos import OBJETOS
 
 # === MATRIZ DE FABRICACIÓN ===
@@ -14,17 +15,21 @@ resultado = [[None]]
 
 
 def pantalla_fabricacion(pantalla):
-    """Muestra la pantalla de fabricación con el tablero sobre el fondo existente."""
+    """Muestra la mesa de crafteo y el inventario sobre el fondo."""
     fuente = pygame.font.SysFont("Minecraft", 16)
     reloj = pygame.time.Clock()
 
-    # 🔹 Cargar imagen del tablero
-    tablero_img = pygame.image.load("juegominecraft\\botones y fondos\Tablero.png").convert_alpha()
-    ancho_tablero, alto_tablero = 500, 520
+    # Fondo (tablero invisible)
+    tablero_img = pygame.image.load("juegominecraft\\botones y fondos\\Tablero.png").convert_alpha()
+    ancho_tablero, alto_tablero = 532, 499
     tablero_img = pygame.transform.scale(tablero_img, (ancho_tablero, alto_tablero))
-
-    # 🔹 Centrar el tablero
     rect_tablero = tablero_img.get_rect(center=(pantalla.get_width() // 2, pantalla.get_height() // 2))
+
+    # Coordenadas base
+    tam_celda = 40
+    inicio_fab_x, inicio_fab_y = rect_tablero.left + 85, rect_tablero.top + 45
+    inicio_result_x, inicio_result_y = rect_tablero.left + 255, rect_tablero.top + 85
+    inicio_inv_x, inicio_inv_y = rect_tablero.left + 28, rect_tablero.top + 170
 
     en_juego = True
     while en_juego:
@@ -34,12 +39,30 @@ def pantalla_fabricacion(pantalla):
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
                 en_juego = False
 
-        # Dibujar el tablero encima del fondo existente
+        # Dibujar fondo
         pantalla.blit(tablero_img, rect_tablero)
 
-        # Texto guía (opcional)
+        # Dibujar la mesa de crafteo
+        for f in range(3):
+            for c in range(3):
+                objeto = mesa_fabricacion[f][c]
+                if objeto:
+                    pantalla.blit(objeto, (inicio_fab_x + c * tam_celda, inicio_fab_y + f * tam_celda))
+
+        # Dibujar resultado
+        if resultado[0][0]:
+            pantalla.blit(resultado[0][0], (inicio_result_x, inicio_result_y))
+
+        # Dibujar inventario (3x8)
+        for f in range(3):
+            for c in range(8):
+                objeto = matriz_inventario[f][c]
+                if objeto:
+                    pantalla.blit(objeto, (inicio_inv_x + c * tam_celda, inicio_inv_y + f * tam_celda))
+
+        # Título
         texto = fuente.render("Mesa de Crafteo", True, (255, 255, 255))
-        pantalla.blit(texto, (pantalla.get_width()//2 - texto.get_width()//2, 20))
+        pantalla.blit(texto, (pantalla.get_width()//2 - texto.get_width()//2, 15))
 
         pygame.display.flip()
         reloj.tick(60)

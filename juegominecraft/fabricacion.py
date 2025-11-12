@@ -15,52 +15,166 @@ resultado = [[None]]
 
 
 def pantalla_fabricacion(pantalla):
-    """Muestra la mesa de crafteo y el inventario sobre el fondo."""
-    fuente = pygame.font.SysFont("Minecraft", 16)
+    """Muestra la mesa de crafteo y el inventario."""
     reloj = pygame.time.Clock()
+    fuente = pygame.font.SysFont("Minecraft", 16)
 
-    # Fondo (tablero invisible)
-    tablero_img = pygame.image.load("juegominecraft\\botones y fondos\\Tablero.png").convert_alpha()
-    ancho_tablero, alto_tablero = 532, 499
-    tablero_img = pygame.transform.scale(tablero_img, (ancho_tablero, alto_tablero))
+    tablero_img = pygame.image.load("juegominecraft/botones y fondos/Tablero.png").convert_alpha()
+    tablero_img = pygame.transform.scale(tablero_img, (532, 499))
     rect_tablero = tablero_img.get_rect(center=(pantalla.get_width() // 2, pantalla.get_height() // 2))
 
-    # Coordenadas base
-    tam_celda = 40
-    inicio_fab_x, inicio_fab_y = rect_tablero.left + 85, rect_tablero.top + 45
-    inicio_result_x, inicio_result_y = rect_tablero.left + 255, rect_tablero.top + 85
-    inicio_inv_x, inicio_inv_y = rect_tablero.left + 28, rect_tablero.top + 170
+    tam_celda = 50
+    tam_celda_resultado = 70
+    tam_celda_inv = 55
+    inicio_fab_x, inicio_fab_y = rect_tablero.left + 95, rect_tablero.top + 55
+    inicio_result_x, inicio_result_y = rect_tablero.left + 360, rect_tablero.top + 90
+    inicio_inv_x, inicio_inv_y = rect_tablero.left + 20, rect_tablero.top + 250
 
-    en_juego = True
-    while en_juego:
+    # Variables para drag & drop
+    item_en_mano = None
+    origen = None
+
+    ejecutando = True
+    while ejecutando:
+        mouse_pos = pygame.mouse.get_pos()
+
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
-                en_juego = False
+                ejecutando = False
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
-                en_juego = False
+                ejecutando = False
 
-        # Dibujar fondo
+            # === CLICK IZQUIERDO (tomar ítem) ===
+            elif evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+                col = (mouse_pos[0] - inicio_fab_x) // tam_celda
+                fila = (mouse_pos[1] - inicio_fab_y) // tam_celda
+
+                # --- Click en la mesa de crafteo ---
+                if 0 <= fila < 3 and 0 <= col < 3:
+                    if mesa_fabricacion[fila][col]:
+                        item_en_mano = mesa_fabricacion[fila][col]
+                        mesa_fabricacion[fila][col] = None
+                        origen = ("mesa", fila, col)
+
+                # --- Click en el inventario ---
+                col = (mouse_pos[0] - inicio_inv_x) // tam_celda
+                fila = (mouse_pos[1] - inicio_inv_y) // tam_celda
+                if 0 <= fila < 3 and 0 <= col < 9:
+                    if matriz_inventario[fila][col]:
+                        item_en_mano = matriz_inventario[fila][col]
+                        matriz_inventario[fila][col] = None
+                        origen = ("inv", fila, col)
+
+            # === SOLTAR EL CLICK (soltar ítem) ===
+            elif evento.type == pygame.MOUSEBUTTONUP and item_en_mano is not None:
+                # --- Soltar en la mesa de crafteo ---
+                col = (mouse_pos[0] - inicio_fab_x) // tam_celda
+                fila = (mouse_pos[1] - inicio_fab_y) // tam_celda
+
+                if 0 <= fila < 3 and 0 <= col < 3:
+                    celda = mesa_fabricacion[fila][col]
+                    if celda is None:
+                        mesa_fabricacion[fila][col] = item_en_mano
+                        verificar_receta()
+                    else:
+                        # Si hay algo, lo devolvemos a su origen
+                        if origen[0] == "inv":
+                            matriz_inventario[origen[1]][origen[2]] = item_en_mano
+                        else:
+                            mesa_fabricacion[origen[1]][origen[2]] = item_en_mano
+                    item_en_mano = None
+                    origen = None
+                    continue
+
+                # --- Soltar en el inventario ---
+                col = (mouse_pos[0] - inicio_inv_x) // tam_celda
+                fila = (mouse_pos[1] - inicio_inv_y) // tam_celda
+                if 0 <= fila < 3 and 0 <= col < 9:
+                    celda = matriz_inventario[fila][col]
+
+                    # Si está vacía, simplemente soltamos el ítem
+                    if celda is None:
+                        matriz_inventario[fila][col] = item_en_mano
+
+                    # Si hay un ítem igual, sumamos cantidades
+                    elif celda["nombre"] == item_en_mano["nombre"]:
+                        celda["cantidad"] += item_en_mano["cantidad"]
+
+                    # Si hay un ítem diferente, los intercambiamos
+                    else:
+                        matriz_inventario[fila][col], item_en_mano = item_en_mano, celda
+
+                    item_en_mano = None
+                    origen = None
+
+        # === DIBUJO ===
+        pantalla.fill((0, 0, 0))
         pantalla.blit(tablero_img, rect_tablero)
 
-        # Dibujar la mesa de crafteo
+        color_lineas = (0, 0, 0)  # negro
+        grosor_linea = 1
+
+        # Mesa de crafteo
         for f in range(3):
             for c in range(3):
-                objeto = mesa_fabricacion[f][c]
-                if objeto:
-                    pantalla.blit(objeto, (inicio_fab_x + c * tam_celda, inicio_fab_y + f * tam_celda))
+                rect = pygame.Rect(inicio_fab_x + c * tam_celda, inicio_fab_y + f * tam_celda, tam_celda, tam_celda)
+                pygame.draw.rect(pantalla, color_lineas, rect, grosor_linea)  # <-- marco negro
+                if mesa_fabricacion[f][c]:
+                    item = mesa_fabricacion[f][c]
+                    sprite = item["sprite"]
+                    sprite_rect = sprite.get_rect(center=rect.center)
+                    pantalla.blit(sprite, sprite_rect)
 
-        # Dibujar resultado
+        # Resultado
+        rect_res = pygame.Rect(inicio_result_x, inicio_result_y, tam_celda_resultado, tam_celda_resultado)
+        pygame.draw.rect(pantalla, color_lineas, rect_res, grosor_linea)
         if resultado[0][0]:
-            pantalla.blit(resultado[0][0], (inicio_result_x, inicio_result_y))
+            sprite = resultado[0][0]
+            sprite_rect = sprite.get_rect(center=rect_res.center)
+            pantalla.blit(sprite, sprite_rect)
 
-        # Dibujar inventario (3x8)
+        # Inventario
         for f in range(3):
-            for c in range(8):
-                objeto = matriz_inventario[f][c]
-                if objeto:
-                    pantalla.blit(objeto, (inicio_inv_x + c * tam_celda, inicio_inv_y + f * tam_celda))
+            for c in range(9):
+                rect = pygame.Rect(
+                    inicio_inv_x + c * tam_celda_inv,
+                    inicio_inv_y + f * tam_celda_inv,
+                    tam_celda_inv,
+                    tam_celda_inv
+                )
+                pygame.draw.rect(pantalla, color_lineas, rect, grosor_linea)  # Marco negro
 
-        # Título
+                if matriz_inventario[f][c]:
+                    item = matriz_inventario[f][c]
+                    sprite = item["sprite"]
+                    sprite_rect = sprite.get_rect(center=rect.center)
+                    pantalla.blit(sprite, sprite_rect)
+
+                    # Mostrar cantidad si hay más de 1
+                    if item["cantidad"] > 1:
+                        fuente_cant = pygame.font.SysFont("Minecraft", 14, bold=True)
+                        texto_cant = fuente_cant.render(str(item["cantidad"]), True, (255, 255, 255))
+                        sombra = fuente_cant.render(str(item["cantidad"]), True, (0, 0, 0))
+
+                        x = rect.right - texto_cant.get_width() - 4
+                        y = rect.bottom - texto_cant.get_height() - 2
+                        pantalla.blit(sombra, (x + 1, y + 1))
+                        pantalla.blit(texto_cant, (x, y))
+
+        # Ítem en mano (sigue el cursor)
+        if item_en_mano:
+            sprite_rect = item_en_mano["sprite"].get_rect(center=mouse_pos)
+            pantalla.blit(item_en_mano["sprite"], sprite_rect)
+
+            if item_en_mano["cantidad"] > 1:
+                fuente_cant = pygame.font.SysFont("Minecraft", 14, bold=True)
+                texto_cant = fuente_cant.render(str(item_en_mano["cantidad"]), True, (255, 255, 255))
+                sombra = fuente_cant.render(str(item_en_mano["cantidad"]), True, (0, 0, 0))
+                x = sprite_rect.right - texto_cant.get_width() - 4
+                y = sprite_rect.bottom - texto_cant.get_height() - 2
+                pantalla.blit(sombra, (x + 1, y + 1))
+                pantalla.blit(texto_cant, (x, y))
+
         texto = fuente.render("Mesa de Crafteo", True, (255, 255, 255))
         pantalla.blit(texto, (pantalla.get_width()//2 - texto.get_width()//2, 15))
 
@@ -98,19 +212,37 @@ def fabricar_objeto(nombre_objeto: str):
 # === FUNCIÓN PARA VERIFICAR SI LA MESA COINCIDE CON ALGUNA RECETA ===
 def verificar_receta():
     """
-    Compara la mesa de fabricación actual con todas las recetas cargadas.
-    Si encuentra coincidencia, actualiza el resultado con el sprite del objeto fabricado.
+    Compara la mesa de fabricación actual con las recetas del JSON.
+    Si hay coincidencia, actualiza el resultado con el objeto fabricado.
     """
-    # Convertimos la mesa a tuplas (para poder comparar con las claves del diccionario)
-    patron_actual = tuple(tuple(fila) for fila in mesa_fabricacion)
+    # Convertimos la mesa actual a una matriz de nombres
+    patron_actual = [
+        [celda["nombre"] if celda else None for celda in fila]
+        for fila in mesa_fabricacion
+    ]
 
-    for patron, nombre_objeto in recetas.items():
-        if patron_actual == patron:
-            resultado[0][0] = fabricar_objeto(nombre_objeto)
-            print(f"✅ Se fabricó: {nombre_objeto}")
-            return nombre_objeto
+    # Recorremos todas las recetas
+    for patron_json, nombre_objeto in recetas.items():
+        # Convertimos el patrón del JSON (que viene como tuplas) a listas normales
+        patron_lista = [list(fila) for fila in patron_json]
 
-    # Si no hay coincidencia
+        # Reemplazamos posibles "null" o "None" escritos como texto
+        patron_lista = [
+            [None if valor in ("null", "None", "") else valor for valor in fila]
+            for fila in patron_lista
+        ]
+
+        if patron_actual == patron_lista:
+            objeto_fabricado = OBJETOS.get(nombre_objeto)
+            if objeto_fabricado:
+                resultado[0][0] = {
+                    "nombre": nombre_objeto,
+                    "sprite": objeto_fabricado["sprite"],
+                    "cantidad": 1
+                }
+                print(f"✅ Se fabricó: {nombre_objeto}")
+                return nombre_objeto
+
     resultado[0][0] = None
     print("Ninguna receta coincide.")
     return None

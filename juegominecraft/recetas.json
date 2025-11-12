@@ -6,9 +6,9 @@
     ],
 
     "manzana_dorada": [
-        [null, null, null],
-        [null, "oro", null],
-        [null, null, "manzana"]
+        ["oro", "oro", "oro"],
+        ["oro", "manzana", "oro"],
+        ["oro", "oro", "oro"]
     ],
 
     "espada": [

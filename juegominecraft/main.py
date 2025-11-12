@@ -126,6 +126,8 @@ def menu_jugar(pantalla, fuente, fondo):
                             pantalla_fabricacion(pantalla)
                         elif boton["nombre"] == "Objetos":
                             print("Abriendo mochila / inventario...")
+                            from inventario import pantalla_inventario
+                            pantalla_inventario(pantalla)
                         elif boton["nombre"] == "Volver":
                             en_submenu = False
 

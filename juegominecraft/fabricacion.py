@@ -129,7 +129,7 @@ def pantalla_fabricacion(pantalla):
         rect_res = pygame.Rect(inicio_result_x, inicio_result_y, tam_celda_resultado, tam_celda_resultado)
         pygame.draw.rect(pantalla, color_lineas, rect_res, grosor_linea)
         if resultado[0][0]:
-            sprite = resultado[0][0]
+            sprite = resultado[0][0]["sprite"]
             sprite_rect = sprite.get_rect(center=rect_res.center)
             pantalla.blit(sprite, sprite_rect)
 
@@ -183,22 +183,18 @@ def pantalla_fabricacion(pantalla):
 
 
 
-def cargar_recetas_desde_json(ruta_archivo: str) -> dict:
-    """
-    Carga un archivo JSON con las recetas de fabricación y
-    las convierte al formato de diccionario con tuplas como claves.
-    """
+def cargar_recetas_desde_json(ruta_archivo: str) -> list:
     with open(ruta_archivo, "r", encoding="utf-8") as archivo:
         data = json.load(archivo)
+    return data["recetas"]
+recetas = cargar_recetas_desde_json("juegominecraft/recetas.json")
 
-    recetas = {}
-    for resultado, matriz in data.items():
-        clave = tuple(tuple(fila) for fila in matriz)
-        recetas[clave] = resultado
-    return recetas
-
-# === CARGA DE RECETAS DESDE JSON ===
-recetas = cargar_recetas_desde_json("juegominecraft\\recetas.json")
+def coincide_patron(patron_mesa, patron_receta):
+    for f in range(3):
+        for c in range(3):
+            if patron_mesa[f][c] != patron_receta[f][c]:
+                return False
+    return True
 
 
 # === FUNCIÓN PARA FABRICAR ===
@@ -211,40 +207,28 @@ def fabricar_objeto(nombre_objeto: str):
 
 # === FUNCIÓN PARA VERIFICAR SI LA MESA COINCIDE CON ALGUNA RECETA ===
 def verificar_receta():
-    """
-    Compara la mesa de fabricación actual con las recetas del JSON.
-    Si hay coincidencia, actualiza el resultado con el objeto fabricado.
-    """
-    # Convertimos la mesa actual a una matriz de nombres
     patron_actual = [
         [celda["nombre"] if celda else None for celda in fila]
         for fila in mesa_fabricacion
     ]
 
-    # Recorremos todas las recetas
-    for patron_json, nombre_objeto in recetas.items():
-        # Convertimos el patrón del JSON (que viene como tuplas) a listas normales
-        patron_lista = [list(fila) for fila in patron_json]
+    for receta in recetas:
+        patron = receta["ingredientes"]
+        nombre_resultado = receta["result"]
 
-        # Reemplazamos posibles "null" o "None" escritos como texto
-        patron_lista = [
-            [None if valor in ("null", "None", "") else valor for valor in fila]
-            for fila in patron_lista
-        ]
-
-        if patron_actual == patron_lista:
-            objeto_fabricado = OBJETOS.get(nombre_objeto)
-            if objeto_fabricado:
+        if coincide_patron(patron_actual, patron):
+            objeto = OBJETOS.get(nombre_resultado)
+            if objeto:
                 resultado[0][0] = {
-                    "nombre": nombre_objeto,
-                    "sprite": objeto_fabricado["sprite"],
+                    "nombre": nombre_resultado,
+                    "sprite": objeto["sprite"],
                     "cantidad": 1
                 }
-                print(f"✅ Se fabricó: {nombre_objeto}")
-                return nombre_objeto
+                print(f"✅ Receta encontrada: {nombre_resultado}")
+                return nombre_resultado
 
     resultado[0][0] = None
-    print("Ninguna receta coincide.")
+    print("❌ Ninguna receta coincide")
     return None
 
 

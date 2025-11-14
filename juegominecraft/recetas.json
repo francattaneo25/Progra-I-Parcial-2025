@@ -1,97 +1,163 @@
 {
-    "mesa": [
+"recetas": [
+    {
+    "nombre": "mesa",
+    "ingredientes": [
         ["madera", "madera", "madera"],
         ["madera", "madera", "madera"],
         ["madera", "madera", "madera"]
     ],
+    "result": "mesa"
+    },
 
-    "manzana_dorada": [
+    {
+    "nombre": "manzana_dorada",
+    "ingredientes": [
         ["oro", "oro", "oro"],
         ["oro", "manzana", "oro"],
         ["oro", "oro", "oro"]
     ],
+    "result": "manzana_dorada"
+    },
 
-    "espada": [
+    {
+    "nombre": "espada",
+    "ingredientes": [
         ["diamante", null, null],
         [null, "madera", null],
         [null, null, "madera"]
     ],
+    "result": "espada"
+    },
 
-    "amuleto": [
+    {
+    "nombre": "amuleto",
+    "ingredientes": [
         ["oro", "oro", "oro"],
         ["oro", "manzana", "oro"],
         ["oro", "oro", "oro"]
     ],
+    "result": "amuleto"
+    },
 
-    "bloque_poder": [
+    {
+    "nombre": "bloque_poder",
+    "ingredientes": [
         ["diamante", null, "diamante"],
         [null, "oro", null],
         ["diamante", null, "diamante"]
     ],
+    "result": "bloque_poder"
+    },
 
-    "pico": [
+    {
+    "nombre": "pico",
+    "ingredientes": [
         ["diamante", "diamante", "diamante"],
         [null, "madera", null],
         [null, "madera", null]
     ],
+    "result": "pico"
+    },
 
-    "hacha": [
+    {
+    "nombre": "hacha",
+    "ingredientes": [
         ["diamante", "diamante", null],
         ["diamante", "madera", null],
         [null, "madera", null]
     ],
+    "result": "hacha"
+    },
 
-    "pala": [
+    {
+    "nombre": "pala",
+    "ingredientes": [
         [null, "diamante", null],
         [null, "madera", null],
         [null, "madera", null]
     ],
+    "result": "pala"
+    },
 
-    "horno": [
+    {
+    "nombre": "horno",
+    "ingredientes": [
         ["piedra", "piedra", "piedra"],
         ["piedra", null, "piedra"],
         ["piedra", "piedra", "piedra"]
     ],
+    "result": "horno"
+    },
 
-    "antorcha": [
+    {
+    "nombre": "antorcha",
+    "ingredientes": [
         [null, null, null],
         [null, "carbon", null],
         [null, "madera", null]
     ],
+    "result": "antorcha"
+    },
 
-    "escudo": [
+    {
+    "nombre": "escudo",
+    "ingredientes": [
         [null, "madera", null],
         ["madera", "hierro", "madera"],
         [null, "madera", null]
     ],
+    "result": "escudo"
+    },
 
-    "yelmo": [
+    {
+    "nombre": "yelmo",
+    "ingredientes": [
         ["hierro", "hierro", "hierro"],
         ["hierro", null, "hierro"],
         [null, null, null]
     ],
+    "result": "yelmo"
+    },
 
-    "pechera": [
+    {
+    "nombre": "pechera",
+    "ingredientes": [
         ["hierro", null, "hierro"],
         ["hierro", "hierro", "hierro"],
         ["hierro", "hierro", "hierro"]
     ],
+    "result": "pechera"
+    },
 
-    "botas": [
+    {
+    "nombre": "botas",
+    "ingredientes": [
         ["hierro", null, "hierro"],
         ["hierro", null, "hierro"],
         [null, null, null]
     ],
+    "result": "botas"
+    },
 
-    "bloque_oro": [
+    {
+    "nombre": "bloque_oro",
+    "ingredientes": [
         ["oro", "oro", "oro"],
         ["oro", "oro", "oro"],
         ["oro", "oro", "oro"]
     ],
+    "result": "bloque_oro"
+    },
 
-    "bloque_diamante": [
+    {
+    "nombre": "bloque_diamante",
+    "ingredientes": [
         ["diamante", "diamante", "diamante"],
         ["diamante", "diamante", "diamante"],
         ["diamante", "diamante", "diamante"]
-    ]
+    ],
+    "result": "bloque_diamante"
+    }
+]
 }

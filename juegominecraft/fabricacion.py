@@ -2,6 +2,7 @@ import pygame
 import json
 from inventario import matriz_inventario
 from objetos import OBJETOS
+from recetario import pantalla_recetario
 
 # === MATRIZ DE FABRICACIÓN ===
 mesa_fabricacion = [
@@ -19,7 +20,7 @@ def pantalla_fabricacion(pantalla):
     reloj = pygame.time.Clock()
     fuente = pygame.font.SysFont("Minecraft", 16)
 
-    tablero_img = pygame.image.load("botones y fondos\Tablero.png").convert_alpha()
+    tablero_img = pygame.image.load("juegominecraft/botones y fondos/Tablero.png").convert_alpha()
     tablero_img = pygame.transform.scale(tablero_img, (532, 499))
     rect_tablero = tablero_img.get_rect(center=(pantalla.get_width() // 2, pantalla.get_height() // 2))
 
@@ -29,6 +30,11 @@ def pantalla_fabricacion(pantalla):
     inicio_fab_x, inicio_fab_y = rect_tablero.left + 95, rect_tablero.top + 55
     inicio_result_x, inicio_result_y = rect_tablero.left + 360, rect_tablero.top + 90
     inicio_inv_x, inicio_inv_y = rect_tablero.left + 20, rect_tablero.top + 250
+
+    # --- BOTÓN INVISIBLE DEL LIBRITO VERDE ---
+    libro_x = inicio_fab_x - 70   # ← si querés más pegado, bajalo a -35
+    libro_y = inicio_fab_y + 50   # centrado verticalmente
+    boton_recetario = pygame.Rect(libro_x, libro_y, 50, 50)
 
     # Variables para drag & drop
     item_en_mano = None
@@ -46,6 +52,10 @@ def pantalla_fabricacion(pantalla):
 
             # === CLICK IZQUIERDO (tomar ítem) ===
             elif evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
+
+                if boton_recetario.collidepoint(mouse_pos):
+                    pantalla_recetario(pantalla)
+                    continue
                 
                 # --- Click en la mesa de crafteo ---
                 col_fab = (mouse_pos[0] - inicio_fab_x) // tam_celda
@@ -173,8 +183,6 @@ def pantalla_fabricacion(pantalla):
                     item_en_mano = None
                     origen = None
 
-
-
         # === DIBUJO ===
         pantalla.fill((0, 0, 0))
         pantalla.blit(tablero_img, rect_tablero)
@@ -245,6 +253,7 @@ def pantalla_fabricacion(pantalla):
 
         texto = fuente.render("Mesa de Crafteo", True, (255, 255, 255))
         pantalla.blit(texto, (pantalla.get_width()//2 - texto.get_width()//2, 15))
+        pygame.draw.rect(pantalla, (0, 0, 0), boton_recetario, 1)
 
         pygame.display.flip()
         reloj.tick(60)
@@ -254,7 +263,7 @@ def cargar_recetas_desde_json(ruta_archivo: str) -> list:
     with open(ruta_archivo, "r", encoding="utf-8") as archivo:
         data = json.load(archivo)
     return data["recetas"]
-recetas = cargar_recetas_desde_json("recetas.json")
+recetas = cargar_recetas_desde_json("juegominecraft/recetas.json")
 
 def coincide_patron(patron_mesa, patron_receta):
     for f in range(3):

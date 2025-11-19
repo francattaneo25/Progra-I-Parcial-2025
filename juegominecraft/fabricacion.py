@@ -46,24 +46,90 @@ def pantalla_fabricacion(pantalla):
 
             # === CLICK IZQUIERDO (tomar ítem) ===
             elif evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
-                col = (mouse_pos[0] - inicio_fab_x) // tam_celda
-                fila = (mouse_pos[1] - inicio_fab_y) // tam_celda
-
+                
                 # --- Click en la mesa de crafteo ---
-                if 0 <= fila < 3 and 0 <= col < 3:
-                    if mesa_fabricacion[fila][col]:
-                        item_en_mano = mesa_fabricacion[fila][col]
-                        mesa_fabricacion[fila][col] = None
-                        origen = ("mesa", fila, col)
+                col_fab = (mouse_pos[0] - inicio_fab_x) // tam_celda
+                fila_fab = (mouse_pos[1] - inicio_fab_y) // tam_celda
+
+                if 0 <= fila_fab < 3 and 0 <= col_fab < 3:
+                    if mesa_fabricacion[fila_fab][col_fab]:
+                        item_en_mano = mesa_fabricacion[fila_fab][col_fab]
+                        mesa_fabricacion[fila_fab][col_fab] = None
+                        origen = ("mesa", fila_fab, col_fab)
+                    continue
 
                 # --- Click en el inventario ---
-                col = (mouse_pos[0] - inicio_inv_x) // tam_celda
-                fila = (mouse_pos[1] - inicio_inv_y) // tam_celda
-                if 0 <= fila < 3 and 0 <= col < 9:
-                    if matriz_inventario[fila][col]:
-                        item_en_mano = matriz_inventario[fila][col]
-                        matriz_inventario[fila][col] = None
-                        origen = ("inv", fila, col)
+                col_inv = (mouse_pos[0] - inicio_inv_x) // tam_celda
+                fila_inv = (mouse_pos[1] - inicio_inv_y) // tam_celda
+
+                if 0 <= fila_inv < 3 and 0 <= col_inv < 9:
+                    if matriz_inventario[fila_inv][col_inv]:
+                        item_en_mano = matriz_inventario[fila_inv][col_inv]
+                        matriz_inventario[fila_inv][col_inv] = None
+                        origen = ("inv", fila_inv, col_inv)
+                    continue
+
+
+                # --- Click en el resultado ---
+                col_res = (mouse_pos[0] - inicio_result_x) // tam_celda_resultado
+                fila_res = (mouse_pos[1] - inicio_result_y) // tam_celda_resultado
+
+                if 0 <= fila_res < 1 and 0 <= col_res < 1:
+                    if resultado[0][0]:
+                        item_en_mano = resultado[0][0]
+                        resultado[0][0] = None
+                        origen = ("resultado", 0, 0)
+                    continue
+                
+            elif evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 3:
+
+                # --- Mesa ---
+                col_fab = (mouse_pos[0] - inicio_fab_x) // tam_celda
+                fila_fab = (mouse_pos[1] - inicio_fab_y) // tam_celda
+
+                if 0 <= fila_fab < 3 and 0 <= col_fab < 3:
+                    celda = mesa_fabricacion[fila_fab][col_fab]
+                    if celda and item_en_mano is None:
+                        item_en_mano = {"nombre": celda["nombre"], "sprite": celda["sprite"], "cantidad": 1}
+                        celda["cantidad"] -= 1
+                        if celda["cantidad"] == 0:
+                            mesa_fabricacion[fila_fab][col_fab] = None
+                        origen = ("mesa", fila_fab, col_fab)
+                    continue
+
+                # --- Inventario ---
+                col_inv = (mouse_pos[0] - inicio_inv_x) // tam_celda
+                fila_inv = (mouse_pos[1] - inicio_inv_y) // tam_celda
+
+                if 0 <= fila_inv < 3 and 0 <= col_inv < 9:
+                    celda = matriz_inventario[fila_inv][col_inv]
+                    if celda and item_en_mano is None:
+                        item_en_mano = {"nombre": celda["nombre"], "sprite": celda["sprite"], "cantidad": 1}
+                        celda["cantidad"] -= 1
+                        if celda["cantidad"] == 0:
+                            matriz_inventario[fila_inv][col_inv] = None
+                        origen = ("inv", fila_inv, col_inv)
+                    continue
+
+                # --- Resultado ---
+                col_res = (mouse_pos[0] - inicio_result_x) // tam_celda_resultado
+                fila_res = (mouse_pos[1] - inicio_result_y) // tam_celda_resultado
+
+                if 0 <= fila_res < 1 and 0 <= col_res < 1:
+                    celda_resultado = resultado[0][0]
+                    if celda_resultado:
+                        # 1) Tomo el item de resultado
+                        item_en_mano = celda_resultado
+                        resultado[0][0] = None
+                        origen = ("resultado", 0, 0)
+                        # 2) CONSUMIR los materiales de la mesa según la receta
+                        for fila in range(3):
+                            for col in range(3):
+                                if mesa_fabricacion[fila][col]:
+                                    mesa_fabricacion[fila][col]["cantidad"] -= 1
+                                    if mesa_fabricacion[fila][col]["cantidad"] <= 0:
+                                        mesa_fabricacion[fila][col] = None
+                        continue
 
             # === SOLTAR EL CLICK (soltar ítem) ===
             elif evento.type == pygame.MOUSEBUTTONUP and item_en_mano is not None:
@@ -106,6 +172,8 @@ def pantalla_fabricacion(pantalla):
 
                     item_en_mano = None
                     origen = None
+
+
 
         # === DIBUJO ===
         pantalla.fill((0, 0, 0))
@@ -182,7 +250,6 @@ def pantalla_fabricacion(pantalla):
         reloj.tick(60)
 
 
-
 def cargar_recetas_desde_json(ruta_archivo: str) -> list:
     with open(ruta_archivo, "r", encoding="utf-8") as archivo:
         data = json.load(archivo)
@@ -230,7 +297,6 @@ def verificar_receta():
     resultado[0][0] = None
     print("❌ Ninguna receta coincide")
     return None
-
 
 # === FUNCIÓN PARA LIMPIAR LA MESA ===
 def limpiar_mesa():

@@ -19,7 +19,7 @@ def pantalla_fabricacion(pantalla):
     reloj = pygame.time.Clock()
     fuente = pygame.font.SysFont("Minecraft", 16)
 
-    tablero_img = pygame.image.load("juegominecraft/botones y fondos/Tablero.png").convert_alpha()
+    tablero_img = pygame.image.load("botones y fondos\Tablero.png").convert_alpha()
     tablero_img = pygame.transform.scale(tablero_img, (532, 499))
     rect_tablero = tablero_img.get_rect(center=(pantalla.get_width() // 2, pantalla.get_height() // 2))
 
@@ -187,7 +187,7 @@ def cargar_recetas_desde_json(ruta_archivo: str) -> list:
     with open(ruta_archivo, "r", encoding="utf-8") as archivo:
         data = json.load(archivo)
     return data["recetas"]
-recetas = cargar_recetas_desde_json("juegominecraft/recetas.json")
+recetas = cargar_recetas_desde_json("recetas.json")
 
 def coincide_patron(patron_mesa, patron_receta):
     for f in range(3):

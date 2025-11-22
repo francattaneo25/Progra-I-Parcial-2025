@@ -143,45 +143,66 @@ def pantalla_fabricacion(pantalla):
 
             # === SOLTAR EL CLICK (soltar ítem) ===
             elif evento.type == pygame.MOUSEBUTTONUP and item_en_mano is not None:
-                # --- Soltar en la mesa de crafteo ---
+
+                mouse_pos = pygame.mouse.get_pos()
+
+                # ----------------------
+                # --- Soltar INVENTARIO
+                # ----------------------
+                col = (mouse_pos[0] - inicio_inv_x) // tam_celda
+                fila = (mouse_pos[1] - inicio_inv_y) // tam_celda
+
+                if 0 <= fila < 3 and 0 <= col < 9:
+                    celda = matriz_inventario[fila][col]
+
+                    # ✔ Celda vacía → colocar
+                    if celda is None:
+                        matriz_inventario[fila][col] = item_en_mano
+
+                    # ✔ Mismo ítem → stackear
+                    elif celda["nombre"] == item_en_mano["nombre"]:
+                        celda["cantidad"] += item_en_mano["cantidad"]
+
+                    # ❌ Ítem distinto → devolver al origen
+                    else:
+                        if origen[0] == "inv":
+                            matriz_inventario[origen[1]][origen[2]] = item_en_mano
+                        elif origen[0] == "mesa":
+                            mesa_fabricacion[origen[1]][origen[2]] = item_en_mano
+                        elif origen[0] == "resultado":
+                            resultado[0][0] = item_en_mano
+
+                    item_en_mano = None
+                    origen = None
+                    continue
+
+
+                # ---------------------------
+                # --- Soltar en MESA
+                # ---------------------------
                 col = (mouse_pos[0] - inicio_fab_x) // tam_celda
                 fila = (mouse_pos[1] - inicio_fab_y) // tam_celda
 
                 if 0 <= fila < 3 and 0 <= col < 3:
                     celda = mesa_fabricacion[fila][col]
+
+                    # ✔ Celda vacía → colocar
                     if celda is None:
                         mesa_fabricacion[fila][col] = item_en_mano
                         verificar_receta()
+
+                    # ❌ Celda ocupada → devolver al origen
                     else:
-                        # Si hay algo, lo devolvemos a su origen
                         if origen[0] == "inv":
                             matriz_inventario[origen[1]][origen[2]] = item_en_mano
-                        else:
+                        elif origen[0] == "mesa":
                             mesa_fabricacion[origen[1]][origen[2]] = item_en_mano
+                        elif origen[0] == "resultado":
+                            resultado[0][0] = item_en_mano
+
                     item_en_mano = None
                     origen = None
                     continue
-
-                # --- Soltar en el inventario ---
-                col = (mouse_pos[0] - inicio_inv_x) // tam_celda
-                fila = (mouse_pos[1] - inicio_inv_y) // tam_celda
-                if 0 <= fila < 3 and 0 <= col < 9:
-                    celda = matriz_inventario[fila][col]
-
-                    # Si está vacía, simplemente soltamos el ítem
-                    if celda is None:
-                        matriz_inventario[fila][col] = item_en_mano
-
-                    # Si hay un ítem igual, sumamos cantidades
-                    elif celda["nombre"] == item_en_mano["nombre"]:
-                        celda["cantidad"] += item_en_mano["cantidad"]
-
-                    # Si hay un ítem diferente, los intercambiamos
-                    else:
-                        matriz_inventario[fila][col], item_en_mano = item_en_mano, celda
-
-                    item_en_mano = None
-                    origen = None
 
         # === DIBUJO ===
         pantalla.fill((0, 0, 0))
@@ -283,10 +304,8 @@ def fabricar_objeto(nombre_objeto: str):
 
 # === FUNCIÓN PARA VERIFICAR SI LA MESA COINCIDE CON ALGUNA RECETA ===
 def verificar_receta():
-    patron_actual = [
-        [celda["nombre"] if celda else None for celda in fila]
-        for fila in mesa_fabricacion
-    ]
+    patron_actual = [[celda["nombre"] if celda else None for celda in fila]
+        for fila in mesa_fabricacion]
 
     for receta in recetas:
         patron = receta["ingredientes"]
@@ -295,11 +314,7 @@ def verificar_receta():
         if coincide_patron(patron_actual, patron):
             objeto = OBJETOS.get(nombre_resultado)
             if objeto:
-                resultado[0][0] = {
-                    "nombre": nombre_resultado,
-                    "sprite": objeto["sprite"],
-                    "cantidad": 1
-                }
+                resultado[0][0] = {"nombre": nombre_resultado,"sprite": objeto["sprite"],"cantidad": 1}
                 print(f"✅ Receta encontrada: {nombre_resultado}")
                 return nombre_resultado
 

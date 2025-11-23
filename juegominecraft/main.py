@@ -49,7 +49,7 @@ def main():
 
     reloj = pygame.time.Clock()
 
-    slots_usuarios = ["", "", ""]
+
 
     while True:
         mouse_pos = pygame.mouse.get_pos()
@@ -59,7 +59,7 @@ def main():
                 sys.exit()
             elif evento.type == pygame.MOUSEBUTTONDOWN:
                 if boton_jugar.collidepoint(mouse_pos):
-                    nombre_usuario = seleccionar_usuario(slots_usuarios)
+                    nombre_usuario = seleccionar_usuario()
                     print(f"Usuario seleccionado: {nombre_usuario}")
                     menu_jugar(pantalla, fuente, fondo)
                 elif boton_opciones.collidepoint(mouse_pos):

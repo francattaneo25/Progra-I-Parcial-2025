@@ -1,6 +1,40 @@
 import pygame
 import sys
+import csv
+import os
 
+RUTA_USUARIOS = "usuarios.csv"
+
+# ===========================
+# FUNCIONES DE CSV SIN TRY/EXCEPT
+# ===========================
+def cargar_usuarios():
+    """Carga los usuarios desde el CSV en una lista de 3 slots."""
+    slots = ["", "", ""]
+    if os.path.exists(RUTA_USUARIOS):
+        f = open(RUTA_USUARIOS, newline="", encoding="utf-8")
+        reader = csv.DictReader(f)
+        for fila in reader:
+            slot = int(fila["slot"])
+            nombre = fila["nombre"]
+            slots[slot] = nombre
+        f.close()
+    else:
+        guardar_usuarios(slots)  # crea CSV si no existe
+    return slots
+
+def guardar_usuarios(slots):
+    """Guarda la lista de slots en el CSV."""
+    f = open(RUTA_USUARIOS, "w", newline="", encoding="utf-8")
+    writer = csv.DictWriter(f, fieldnames=["slot", "nombre"])
+    writer.writeheader()
+    for i, nombre in enumerate(slots):
+        writer.writerow({"slot": i, "nombre": nombre})
+    f.close()
+
+# ===========================
+# INTERFAZ GRÁFICA
+# ===========================
 def dibujar_boton(pantalla, texto, rect, fuente, color_normal, color_hover, mouse_pos):
     color = color_hover if rect.collidepoint(mouse_pos) else color_normal
     pygame.draw.rect(pantalla, color, rect, border_radius=10)
@@ -8,17 +42,23 @@ def dibujar_boton(pantalla, texto, rect, fuente, color_normal, color_hover, mous
     texto_rect = texto_render.get_rect(center=rect.center)
     pantalla.blit(texto_render, texto_rect)
 
-def seleccionar_usuario(slots):
+def seleccionar_usuario():
+    """Muestra la pantalla de selección/creación de usuario y devuelve el nombre seleccionado."""
     pygame.init()
-    pantalla = pygame.display.set_mode((800, 600))
+    ancho, alto = 800, 600
+    pantalla = pygame.display.set_mode((ancho, alto))
     pygame.display.set_caption("Seleccionar Usuario")
     fuente = pygame.font.SysFont("Minecraft", 28)
-
     reloj = pygame.time.Clock()
-    mouse_pos = (0, 0)
-    fondo = pygame.image.load("juegominecraft/botones y fondos\Dirt_background_BE1.png").convert()
-    fondo = pygame.transform.scale(fondo, (800, 600))
 
+    slots = cargar_usuarios()
+    mouse_pos = (0, 0)
+
+    # Fondo estilo Dirt
+    fondo = pygame.image.load("juegominecraft/botones y fondos/Dirt_background_BE1.png").convert()
+    fondo = pygame.transform.scale(fondo, (ancho, alto))
+
+    # Rectángulos de los slots
     botones_slots = []
     ancho_btn, alto_btn = 400, 60
     x_pos = 200
@@ -44,17 +84,15 @@ def seleccionar_usuario(slots):
                     if evento.key == pygame.K_RETURN:
                         if input_text.strip() != "":
                             slots[slot_seleccionado] = input_text.strip()
-                        input_text = ""
-                        estado_input = False
+                            guardar_usuarios(slots)
                         return slots[slot_seleccionado]
                     elif evento.key == pygame.K_BACKSPACE:
                         input_text = input_text[:-1]
                     else:
                         if len(input_text) < 20:
                             input_text += evento.unicode
-
             else:
-                if evento.type == pygame.MOUSEBUTTONDOWN:
+                if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                     for i, rect in enumerate(botones_slots):
                         if rect.collidepoint(mouse_pos):
                             slot_seleccionado = i
@@ -64,21 +102,32 @@ def seleccionar_usuario(slots):
                             else:
                                 return slots[i]
 
-        pantalla.blit(fondo, (0, 0))
+        # --- DIBUJO ---
+        pantalla.blit(fondo, (0, 0))  # <-- fondo Dirt
 
         for i, rect in enumerate(botones_slots):
-            texto = slots[i]  if slots[i] != "" else "(vacio) - click para crear"
-            dibujar_boton(pantalla, texto, rect, fuente, (50, 50, 50), (100, 100, 100), mouse_pos)
+            # Color del botón: gris oscuro normal, gris claro hover
+            color_normal = (50, 50, 50)
+            color_hover = (100, 100, 100)
+            texto = slots[i] if slots[i] != "" else "(vacio) - click para crear"
+            dibujar_boton(pantalla, texto, rect, fuente, color_normal, color_hover, mouse_pos)
 
         if estado_input:
             input_rect = pygame.Rect(200, 450, 400, 50)
-            pygame.draw.rect(pantalla, (0, 0, 0), input_rect)
-            pygame.draw.rect(pantalla, (255, 255, 255), input_rect, 2)
-            texto_input = fuente.render(input_text, True, (255, 255, 255))
-            pantalla.blit(texto_input, (input_rect.x + 10, input_rect.y + 10))
+            pygame.draw.rect(pantalla, (0,0,0), input_rect)
+            pygame.draw.rect(pantalla, (255,255,255), input_rect, 2)
+            texto_input = fuente.render(input_text, True, (255,255,255))
+            pantalla.blit(texto_input, (input_rect.x+10, input_rect.y+10))
 
-            indicacion = fuente.render("Ingrese nombre y presione ENTER", True, (255, 255, 255))
+            indicacion = fuente.render("Ingrese nombre y presione ENTER", True, (255,255,255))
             pantalla.blit(indicacion, (200, 400))
 
         pygame.display.flip()
         reloj.tick(60)
+
+# ===========================
+# EJEMPLO DE USO
+# ===========================
+if __name__ == "__main__":
+    nombre = seleccionar_usuario()
+    print(f"Usuario seleccionado: {nombre}")

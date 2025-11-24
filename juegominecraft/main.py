@@ -33,15 +33,15 @@ def main():
     boton_salir = pygame.Rect(ancho // 2 - 150, 510, 300, 60)
 
 
-    fondo = pygame.image.load("juegominecraft/botones y fondos/fondojuegominecraft.png")
+    fondo = pygame.image.load("botones y fondos/fondojuegominecraft.png")
     fondo = pygame.transform.scale(fondo, (800, 600))
 
-    imagen_boton = pygame.image.load("juegominecraft/botones y fondos/boton.png").convert_alpha()
+    imagen_boton = pygame.image.load("botones y fondos/boton.png").convert_alpha()
 
-    pygame.mixer.music.load(r"juegominecraft/botones y fondos/MINECRAFT MENU MUSIC.mp3")
+    pygame.mixer.music.load(r"botones y fondos/MINECRAFT MENU MUSIC.mp3")
     pygame.mixer.music.play(-1)
 
-    titulo = pygame.image.load("juegominecraft/botones y fondos\Minecraft-Logo-2013.png")
+    titulo = pygame.image.load("botones y fondos\Minecraft-Logo-2013.png")
     titulo = pygame.transform.scale(titulo, (610, 350))
     rect_titulo = titulo.get_rect()
     rect_titulo.centerx = ancho // 2
@@ -84,17 +84,17 @@ def menu_jugar(pantalla, fuente, fondo):
     ancho, alto = pantalla.get_size()
     
     # Fondo
-    fondo = pygame.image.load("juegominecraft/botones y fondos\Dirt_background_BE1.png").convert()
+    fondo = pygame.image.load("botones y fondos\Dirt_background_BE1.png").convert()
     fondo = pygame.transform.scale(fondo, (ancho, alto))
 
     # Imágenes de íconos
-    img_fabricar = pygame.image.load("juegominecraft/botones y fondos\Crafting_Table_JE4_BE3.png").convert_alpha()
-    img_mochila = pygame.image.load("juegominecraft/botones y fondos\mochila.jpg").convert_alpha()
+    img_fabricar = pygame.image.load("botones y fondos\Crafting_Table_JE4_BE3.png").convert_alpha()
+    img_mochila = pygame.image.load("botones y fondos\mochila.jpg").convert_alpha()
     img_fabricar = pygame.transform.scale(img_fabricar, (120, 120))
     img_mochila = pygame.transform.scale(img_mochila, (120, 120))
 
     # Imagen de botón base y hover
-    boton_base = pygame.image.load("juegominecraft/botones y fondos/boton chico.png").convert_alpha()
+    boton_base = pygame.image.load("botones y fondos/boton chico.png").convert_alpha()
     boton_hover = boton_base.copy()
     boton_hover.set_alpha(255)
     boton_base.set_alpha(180)

@@ -4,7 +4,7 @@ from objetos import OBJETOS
 
 # Cargar recetas desde JSON
 def cargar_recetas():
-    with open("juegominecraft/recetas.json", "r", encoding="utf-8") as f:
+    with open("recetas.json", "r", encoding="utf-8") as f:
         data = json.load(f)
     return data["recetas"]
 
@@ -25,11 +25,11 @@ def pantalla_recetario(pantalla):
 
     # Iconos laterales
     iconos = [
-    ("todo", pygame.transform.scale(pygame.image.load("juegominecraft/objetos sprites/Compass_JE3_BE3.png"), (40, 40))),
-    ("bloques", pygame.transform.scale(pygame.image.load("juegominecraft/objetos sprites/Bricks_JE5_BE3.png"), (40, 40))),
-    ("decoracion", pygame.transform.scale(pygame.image.load("juegominecraft/objetos sprites/Stone_Axe_JE2_BE2.png"), (40, 40))),
-    ("comida", pygame.transform.scale(pygame.image.load("juegominecraft/objetos sprites/apple.png"), (40, 40))),
-    ("redstone", pygame.transform.scale(pygame.image.load("juegominecraft/objetos sprites/Redstone_Dust_JE2_BE2.png"), (40, 40))),
+    ("todo", pygame.transform.scale(pygame.image.load("objetos sprites\Compass_JE3_BE3.png"), (40, 40))),
+    ("bloques", pygame.transform.scale(pygame.image.load("objetos sprites\Bricks_JE5_BE3.png"), (40, 40))),
+    ("decoracion", pygame.transform.scale(pygame.image.load("objetos sprites\Stone_Axe_JE2_BE2.png"), (40, 40))),
+    ("comida", pygame.transform.scale(pygame.image.load("objetos sprites/apple.png"), (40, 40))),
+    ("redstone", pygame.transform.scale(pygame.image.load("objetos sprites\Redstone_Dust_JE2_BE2.png"), (40, 40))),
 ]
 
     ejecutando = True

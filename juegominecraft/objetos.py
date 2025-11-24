@@ -11,12 +11,12 @@ def cargar_sprite(ruta):
 
 
 OBJETOS = {
-    "madera": {"sprite": cargar_sprite("juegominecraft/objetos sprites/tronco_roble.png"), "tipo": "material"},
-    "oro": {"sprite": cargar_sprite("juegominecraft/objetos sprites/gold.png"), "tipo": "material"},
-    "espada": {"sprite": cargar_sprite("juegominecraft/objetos sprites/swordwood.png"), "tipo": "arma"},
-    "manzana_dorada": {"sprite": cargar_sprite("juegominecraft/objetos sprites/goldenapple.png"), "tipo": "comida"},
-    "manzana": {"sprite": cargar_sprite("juegominecraft/objetos sprites/apple.png"), "tipo": "comida"},
-    "diamante": {"sprite": cargar_sprite("juegominecraft/objetos sprites/diamond.png"), "tipo": "material"}
+    "madera": {"sprite": cargar_sprite("objetos sprites/tronco_roble.png"), "tipo": "material"},
+    "oro": {"sprite": cargar_sprite("objetos sprites\gold.png"), "tipo": "material"},
+    "espada": {"sprite": cargar_sprite("objetos sprites\swordwood.png"), "tipo": "arma"},
+    "manzana_dorada": {"sprite": cargar_sprite("objetos sprites\goldenapple.png"), "tipo": "comida"},
+    "manzana": {"sprite": cargar_sprite("objetos sprites/apple.png"), "tipo": "comida"},
+    "diamante": {"sprite": cargar_sprite("objetos sprites\diamond.png"), "tipo": "material"}
 }
 
 

@@ -44,6 +44,7 @@ def mostrar_mochila(pantalla):
     """Muestra una cuadrícula con todos los objetos disponibles para agregar al inventario."""
     reloj = pygame.time.Clock()
     fuente = pygame.font.SysFont("Minecraft", 18)
+
     objetos_lista = list(OBJETOS.items())
     columnas = 6
     tam_celda = 80
@@ -51,40 +52,79 @@ def mostrar_mochila(pantalla):
     espacio = 30
     ancho, alto = pantalla.get_size()
 
+    # Paginación
+    items_por_pagina = 18  # 3 filas × 6 columnas
+    pagina_actual = 0
+
     ejecutando = True
     while ejecutando:
         mouse_pos = pygame.mouse.get_pos()
+
+        # ------------------------------------------------------------------
+        # EVENTOS
+        # ------------------------------------------------------------------
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
                 ejecutando = False
+
             elif evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
-                for i, (nombre, datos) in enumerate(objetos_lista):
+
+                # Detectar click en flechas
+                if flecha_izq.collidepoint(mouse_pos) and pagina_actual > 0:
+                    pagina_actual -= 1
+                    continue
+
+                if flecha_der.collidepoint(mouse_pos) and pagina_actual < total_pag - 1:
+                    pagina_actual += 1
+                    continue
+
+                # Click en los objetos visibles en esta página
+                inicio = pagina_actual * items_por_pagina
+                fin = inicio + items_por_pagina
+                pagina_items = objetos_lista[inicio:fin]
+
+                for i, (nombre, datos) in enumerate(pagina_items):
                     fila = i // columnas
                     col = i % columnas
+
                     rect = pygame.Rect(
                         margen_x + col * (tam_celda + espacio),
                         margen_y + fila * (tam_celda + espacio),
                         tam_celda,
                         tam_celda
                     )
+
                     if rect.collidepoint(mouse_pos):
                         agregar_a_inventario(nombre, datos)
                         ejecutando = False
                         break
 
+        # ------------------------------------------------------------------
+        # DIBUJAR PANTALLA
+        # ------------------------------------------------------------------
         pantalla.fill((40, 40, 40))
+
         titulo = fuente.render("MOCHILA - Haz clic en un objeto para agregarlo", True, (255, 255, 255))
         pantalla.blit(titulo, (ancho // 2 - titulo.get_width() // 2, 50))
 
-        for i, (nombre, datos) in enumerate(objetos_lista):
+        # Items de la página actual
+        inicio = pagina_actual * items_por_pagina
+        fin = inicio + items_por_pagina
+        pagina_items = objetos_lista[inicio:fin]
+
+        # Dibujar objetos
+        for i, (nombre, datos) in enumerate(pagina_items):
             fila = i // columnas
             col = i % columnas
             x = margen_x + col * (tam_celda + espacio)
             y = margen_y + fila * (tam_celda + espacio)
+
             rect = pygame.Rect(x, y, tam_celda, tam_celda)
+
             pygame.draw.rect(pantalla, (80, 80, 80), rect, border_radius=8)
             pygame.draw.rect(pantalla, (200, 200, 200), rect, 2, border_radius=8)
 
@@ -93,6 +133,27 @@ def mostrar_mochila(pantalla):
 
             texto_nombre = fuente.render(nombre, True, (255, 255, 255))
             pantalla.blit(texto_nombre, (x + (tam_celda // 2 - texto_nombre.get_width() // 2), y + tam_celda + 5))
+
+        # ------------------------------------------------------------------
+        # PAGINACIÓN VISUAL
+        # ------------------------------------------------------------------
+        total_pag = max(1, (len(objetos_lista) - 1) // items_por_pagina + 1)
+
+        # Texto "1/5"
+        pag_text = fuente.render(f"{pagina_actual + 1}/{total_pag}", True, (255, 255, 255))
+        pantalla.blit(pag_text, (ancho // 2 - pag_text.get_width() // 2, alto - 60))
+
+        # Flechas
+        flecha_izq = pygame.Rect(ancho // 2 - 70, alto - 65, 30, 30)
+        flecha_der = pygame.Rect(ancho // 2 + 40, alto - 65, 30, 30)
+
+        pygame.draw.rect(pantalla, (150, 150, 150), flecha_izq, border_radius=5)
+        pygame.draw.rect(pantalla, (150, 150, 150), flecha_der, border_radius=5)
+
+        pantalla.blit(fuente.render("<", True, (0, 0, 0)), (flecha_izq.x + 8, flecha_izq.y + 2))
+        pantalla.blit(fuente.render(">", True, (0, 0, 0)), (flecha_der.x + 8, flecha_der.y + 2))
+
+        # ------------------------------------------------------------------
 
         pygame.display.flip()
         reloj.tick(60)

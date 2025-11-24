@@ -1,6 +1,10 @@
 import pygame
 import json
 from objetos import OBJETOS
+from fabricacion import matriz_inventario
+
+tick = pygame.transform.scale(pygame.image.load("botones y fondos\green-check-mark-icon-png-11.png"), (15, 15))
+cruz = pygame.transform.scale(pygame.image.load("botones y fondos\cross-red-x-pixel-art.png"), (15, 15))
 
 # Cargar recetas desde JSON
 def cargar_recetas():
@@ -9,6 +13,41 @@ def cargar_recetas():
     return data["recetas"]
 
 recetas = cargar_recetas()
+
+def receta_disponible_inventario(inventario, receta):
+    """
+    Verifica si el inventario contiene TODOS los items necesarios para fabricar la receta,
+    sin importar la posición en una mesa de crafteo.
+    """
+    ingredientes = receta.get("ingredientes")
+    if not ingredientes:
+        return False
+
+    # Contar ingredientes de la receta
+    requeridos = {}
+
+    for fila in ingredientes:
+        for obj in fila:
+            if obj not in (None, ""):
+                requeridos[obj] = requeridos.get(obj, 0) + 1
+
+    # Contar inventario real
+    disponibles = {}
+
+    for f in range(3):
+        for c in range(9):
+            celda = inventario[f][c]
+            if celda:
+                nombre = celda["nombre"]
+                cant = celda["cantidad"]
+                disponibles[nombre] = disponibles.get(nombre, 0) + cant
+
+    # Comparar requeridos vs disponibles
+    for nombre, cant_req in requeridos.items():
+        if disponibles.get(nombre, 0) < cant_req:
+            return False
+
+    return True
 
 # ===========================
 #   NUEVO RECETARIO ESTILO MC
@@ -179,12 +218,21 @@ def pantalla_recetario(pantalla):
             ry = y + fila * (alto + 10)
 
             rect = pygame.Rect(rx, ry, ancho, alto)
-            pygame.draw.rect(pantalla, (200, 60, 60), rect, 3)  # borde rojo
+            pygame.draw.rect(pantalla, (30, 30, 30), rect, 3)  # borde rojo
 
             objeto = OBJETOS.get(receta["result"])
             if objeto:
                 sprite = objeto["sprite"]
                 pantalla.blit(sprite, (rx+10, ry+10))
+
+            # Solo si la receta tiene ingredientes reales
+            if "ingredientes" in receta:
+                se_puede = receta_disponible_inventario(matriz_inventario, receta)
+
+                icono = tick if se_puede else cruz
+
+                # esquina inferior derecha del cuadrado
+                pantalla.blit(icono, (rx + ancho - 16, ry + alto - 18))
 
         # Mostrar matriz 3x3 de la receta seleccionada
         if receta_seleccionada is not None:

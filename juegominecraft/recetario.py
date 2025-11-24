@@ -27,12 +27,13 @@ def pantalla_recetario(pantalla):
     iconos = [
     ("todo", pygame.transform.scale(pygame.image.load("objetos sprites\Compass_JE3_BE3.png"), (40, 40))),
     ("bloques", pygame.transform.scale(pygame.image.load("objetos sprites\Bricks_JE5_BE3.png"), (40, 40))),
-    ("decoracion", pygame.transform.scale(pygame.image.load("objetos sprites\Stone_Axe_JE2_BE2.png"), (40, 40))),
+    ("decoracion", pygame.transform.scale(pygame.image.load("objetos sprites\Stone_Axe.png"), (40, 40))),
     ("comida", pygame.transform.scale(pygame.image.load("objetos sprites/apple.png"), (40, 40))),
     ("redstone", pygame.transform.scale(pygame.image.load("objetos sprites\Redstone_Dust_JE2_BE2.png"), (40, 40))),
 ]
 
     ejecutando = True
+    receta_seleccionada = None  # Guardará la receta clickeada
     while ejecutando:
         mouse_pos = pygame.mouse.get_pos()
 
@@ -70,6 +71,30 @@ def pantalla_recetario(pantalla):
                         r = pygame.Rect(20, 80 + i*55, 40, 40)
                         if r.collidepoint(mouse_pos):
                             categoria_seleccionada = cat
+                    
+                    # Click en la grilla de objetos
+                    x = 150
+                    y = 90
+                    ancho = 60
+                    alto = 60
+                    columnas = 5
+
+                    inicio = pagina_actual * recetas_por_pagina
+                    fin = inicio + recetas_por_pagina
+                    pagina_items = filtradas[inicio:fin]
+
+                    for i, receta in enumerate(pagina_items):
+                        col = i % columnas
+                        fila = i // columnas
+                        rx = x + col * (ancho + 10)
+                        ry = y + fila * (alto + 10)
+                        rect = pygame.Rect(rx, ry, ancho, alto)
+                        if rect.collidepoint(mouse_pos):
+                            # Buscar la receta real en JSON
+                            nombre_obj = receta["result"]
+                            receta_real = next((r for r in recetas if r["result"] == nombre_obj), None)
+                            receta_seleccionada = receta_real  # Puede ser None si no tiene receta
+                            break
 
         # =========================
         # DIBUJO DE LA PANTALLA
@@ -103,19 +128,35 @@ def pantalla_recetario(pantalla):
         # ============================
         filtradas = []
 
-        for r in recetas:
-            nombre = r["result"].lower()
+        for nombre, datos in OBJETOS.items():
+            tipo = datos["tipo"]
 
-            # filtrar por categoría
-            if categoria_seleccionada != "todo":
-                if r.get("categoria", "todo") != categoria_seleccionada:
+            # FILTRO POR CATEGORÍA
+            if categoria_seleccionada == "comida":
+                if tipo != "comida":
                     continue
 
-            # filtrar búsqueda
-            if search_text.lower() not in nombre:
+            elif categoria_seleccionada == "decoracion":
+                if tipo != "arma":
+                    continue
+
+            elif categoria_seleccionada == "redstone":
+                if "redstone" not in nombre.lower():
+                    continue
+
+            elif categoria_seleccionada == "bloques":
+                if tipo != "bloque":   # cuando agregues bloques funcionará
+                    continue
+
+            # FILTRO BÚSQUEDA
+            if search_text.lower() not in nombre.lower():
                 continue
 
-            filtradas.append(r)
+            # Buscar si el OBJETO tiene receta real en el JSON
+            receta_real = next((r for r in recetas if r["result"] == nombre), None)
+
+            # Guardamos siempre result, y si tiene receta guardamos ingredientes también
+            filtradas.append(receta_real if receta_real else {"result": nombre})
 
         # ============================
         # MOSTRAR RECETAS EN GRILLA
@@ -144,6 +185,30 @@ def pantalla_recetario(pantalla):
             if objeto:
                 sprite = objeto["sprite"]
                 pantalla.blit(sprite, (rx+10, ry+10))
+
+        # Mostrar matriz 3x3 de la receta seleccionada
+        if receta_seleccionada is not None:
+            start_x = pantalla.get_width() - 250
+            start_y = 100
+            tam_celda = 50
+            espacio = 5
+
+            ingredientes = receta_seleccionada.get("ingredientes", [[None]*3 for _ in range(3)])
+            for f in range(3):
+                for c in range(3):
+                    x = start_x + c * (tam_celda + espacio)
+                    y = start_y + f * (tam_celda + espacio)
+                    rect = pygame.Rect(x, y, tam_celda, tam_celda)
+                    pygame.draw.rect(pantalla, (180, 180, 180), rect)   # fondo celda
+                    pygame.draw.rect(pantalla, (100, 100, 100), rect, 2) # borde celda
+
+                    item = None
+                    if f < len(ingredientes) and c < len(ingredientes[f]):
+                        item = ingredientes[f][c]
+
+                    if item and item in OBJETOS:
+                        sprite = OBJETOS[item]["sprite"]
+                        pantalla.blit(sprite, sprite.get_rect(center=rect.center))
 
         # ============================
         # PAGINACIÓN

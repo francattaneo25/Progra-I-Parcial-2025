@@ -13,21 +13,31 @@
     {
     "nombre": "manzana_dorada",
     "ingredientes": [
-        ["oro", "oro", "oro"],
-        ["oro", "manzana", "oro"],
-        ["oro", "oro", "oro"]
+        ["lingote oro", "lingote oro", "lingote oro"],
+        ["lingote oro", "manzana", "lingote oro"],
+        ["lingote oro", "lingote oro", "lingote oro"]
     ],
     "result": "manzana_dorada"
     },
 
     {
-    "nombre": "espada",
+    "nombre": "espada diamante",
     "ingredientes": [
-        ["diamante", null, null],
-        [null, "madera", null],
-        [null, null, "madera"]
+        [null, "diamante", null],
+        [null, "diamante", null],
+        [null, "palo", null]
     ],
-    "result": "espada"
+    "result": "espada diamante"
+    },
+
+    {
+    "nombre": "espada hierro",
+    "ingredientes": [
+        [null, "lingote hierro", null],
+        [null, "lingote hierro", null],
+        [null, "palo", null]
+    ],
+    "result": "espada hierro"
     },
 
     {
@@ -41,13 +51,13 @@
     },
 
     {
-    "nombre": "bloque_poder",
+    "nombre": "antorcha redstone",
     "ingredientes": [
-        ["diamante", null, "diamante"],
-        [null, "oro", null],
-        ["diamante", null, "diamante"]
+        [null, null, null],
+        [null, "redstone", null],
+        [null, "palo", null]
     ],
-    "result": "bloque_poder"
+    "result": "antorcha redstone"
     },
 
     {
@@ -101,11 +111,11 @@
     },
 
     {
-    "nombre": "escudo",
+    "nombre": "zanahoria dorada",
     "ingredientes": [
-        [null, "madera", null],
+        ["pepita oro", "madera", "madera"],
         ["madera", "hierro", "madera"],
-        [null, "madera", null]
+        ["madera", "madera", "madera"]
     ],
     "result": "escudo"
     },
@@ -141,13 +151,13 @@
     },
 
     {
-    "nombre": "bloque_oro",
+    "nombre": "lingote oro",
     "ingredientes": [
-        ["oro", "oro", "oro"],
-        ["oro", "oro", "oro"],
-        ["oro", "oro", "oro"]
+        ["pepita oro", "pepita oro", "pepita oro"],
+        ["pepita oro", "pepita oro", "pepita oro"],
+        ["pepita oro", "pepita oro", "pepita oro"]
     ],
-    "result": "bloque_oro"
+    "result": "lingote oro"
     },
 
     {
@@ -159,5 +169,6 @@
     ],
     "result": "bloque_diamante"
     }
+    
 ]
 }

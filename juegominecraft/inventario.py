@@ -45,7 +45,7 @@ def mostrar_mochila(pantalla):
     reloj = pygame.time.Clock()
     fuente = pygame.font.SysFont("Minecraft", 18)
     objetos_lista = list(OBJETOS.items())
-    columnas = 4
+    columnas = 6
     tam_celda = 80
     margen_x, margen_y = 120, 120
     espacio = 30

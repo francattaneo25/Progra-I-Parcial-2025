@@ -275,7 +275,7 @@ def seleccionar_usuario():
 
             texto = datos["slots"][i]["nombre"]
             if texto == "":
-                texto = "(vacío) - click para crear"
+                texto = "(vacio) - click para crear"
 
             dibujar_boton(pantalla, texto, rect, fuente, color_normal, color_hover, mouse_pos)
 

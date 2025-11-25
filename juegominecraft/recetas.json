@@ -1,13 +1,13 @@
 {
 "recetas": [
     {
-    "nombre": "mesa",
+    "nombre": "espada madera",
     "ingredientes": [
-        ["madera", "madera", "madera"],
-        ["madera", "madera", "madera"],
-        ["madera", "madera", "madera"]
+        [null, "tablon de madera", null],
+        [null, "tablon de madera", null],
+        [null, "palo", null]
     ],
-    "result": "mesa"
+    "result": "espada madera"
     },
 
     {
@@ -41,13 +41,14 @@
     },
 
     {
-    "nombre": "amuleto",
+    "nombre": "tablon de madera",
     "ingredientes": [
-        ["oro", "oro", "oro"],
-        ["oro", "manzana", "oro"],
-        ["oro", "oro", "oro"]
+        [null, null, null],
+        [null, "madera", null],
+        [null, null, null]
     ],
-    "result": "amuleto"
+    "result": "tablon de madera",
+    "cantidad":4
     },
 
     {
@@ -71,23 +72,23 @@
     },
 
     {
-    "nombre": "hacha",
+    "nombre": "hacha diamante",
     "ingredientes": [
         ["diamante", "diamante", null],
-        ["diamante", "madera", null],
-        [null, "madera", null]
+        ["diamante", "palo", null],
+        [null, "palo", null]
     ],
-    "result": "hacha"
+    "result": "hacha diamante"
     },
 
     {
-    "nombre": "pala",
+    "nombre": "pala diamante",
     "ingredientes": [
         [null, "diamante", null],
-        [null, "madera", null],
-        [null, "madera", null]
+        [null, "palo", null],
+        [null, "palo", null]
     ],
-    "result": "pala"
+    "result": "pala diamante"
     },
 
     {
@@ -113,11 +114,11 @@
     {
     "nombre": "zanahoria dorada",
     "ingredientes": [
-        ["pepita oro", "madera", "madera"],
-        ["madera", "hierro", "madera"],
-        ["madera", "madera", "madera"]
+        ["pepita oro", "pepita oro", "pepita oro"],
+        ["pepita oro", "zanahoria", "pepita oro"],
+        ["pepita oro", "pepita oro", "pepita oro"]
     ],
-    "result": "escudo"
+    "result": "zanahoria dorada"
     },
 
     {
@@ -161,13 +162,13 @@
     },
 
     {
-    "nombre": "bloque_diamante",
+    "nombre": "pan",
     "ingredientes": [
-        ["diamante", "diamante", "diamante"],
-        ["diamante", "diamante", "diamante"],
-        ["diamante", "diamante", "diamante"]
+        [null, null, null],
+        ["trigo", "trigo", "trigo"],
+        [null, null, null]
     ],
-    "result": "bloque_diamante"
+    "result": "pan"
     }
     
 ]

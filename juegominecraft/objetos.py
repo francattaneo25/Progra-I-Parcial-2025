@@ -44,6 +44,9 @@ OBJETOS = {
     "pala hierro": {"sprite": cargar_sprite("objetos sprites\Iron_Shovel.png"), "tipo": "arma"},
     "pala oro": {"sprite": cargar_sprite("objetos sprites\Golden_Shovel.png"), "tipo": "arma"},
     "pala diamante": {"sprite": cargar_sprite("objetos sprites\Diamond_Shovel.png"), "tipo": "arma"},
+    "horno": {"sprite": cargar_sprite("objetos sprites/Furnace.png"), "tipo": "material"},
+    "trigo": {"sprite": cargar_sprite("objetos sprites/Wheat.png"), "tipo": "material"},
+    "pan": {"sprite": cargar_sprite("objetos sprites/Pan.png"), "tipo": "comida"},
 }
 
 

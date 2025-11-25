@@ -184,7 +184,7 @@ def pantalla_recetario(pantalla):
                     continue
 
             elif categoria_seleccionada == "bloques":
-                if tipo != "bloque":   # cuando agregues bloques funcionará
+                if tipo != "material":   # cuando agregues bloques funcionará
                     continue
 
             # FILTRO BÚSQUEDA

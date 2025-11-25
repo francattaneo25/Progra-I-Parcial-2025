@@ -14,7 +14,6 @@ mesa_fabricacion = [
 # Resultado de la mesa (1x1)
 resultado = [[None]]
 
-
 def pantalla_fabricacion(pantalla):
     """Muestra la mesa de crafteo y el inventario."""
     reloj = pygame.time.Clock()
@@ -78,7 +77,6 @@ def pantalla_fabricacion(pantalla):
                         matriz_inventario[fila_inv][col_inv] = None
                         origen = ("inv", fila_inv, col_inv)
                     continue
-
 
                 # --- Click en el resultado ---
                 col_res = (mouse_pos[0] - inicio_result_x) // tam_celda_resultado
@@ -175,7 +173,6 @@ def pantalla_fabricacion(pantalla):
                     item_en_mano = None
                     origen = None
                     continue
-
 
                 # ---------------------------
                 # --- Soltar en MESA
@@ -293,14 +290,12 @@ def coincide_patron(patron_mesa, patron_receta):
                 return False
     return True
 
-
 # === FUNCIÓN PARA FABRICAR ===
 def fabricar_objeto(nombre_objeto: str):
     objeto = OBJETOS.get(nombre_objeto)
     if objeto:
         return objeto["sprite"]
     return None
-
 
 # === FUNCIÓN PARA VERIFICAR SI LA MESA COINCIDE CON ALGUNA RECETA ===
 def verificar_receta():
@@ -314,18 +309,11 @@ def verificar_receta():
         if coincide_patron(patron_actual, patron):
             objeto = OBJETOS.get(nombre_resultado)
             if objeto:
-                resultado[0][0] = {"nombre": nombre_resultado,"sprite": objeto["sprite"],"cantidad": 1}
+                cantidad = receta.get("cantidad", 1)
+                resultado[0][0] = {"nombre": nombre_resultado,"sprite": objeto["sprite"],"cantidad": cantidad}
                 print(f"✅ Receta encontrada: {nombre_resultado}")
                 return nombre_resultado
 
     resultado[0][0] = None
     print("❌ Ninguna receta coincide")
     return None
-
-# === FUNCIÓN PARA LIMPIAR LA MESA ===
-def limpiar_mesa():
-    """Reinicia la mesa de fabricación."""
-    for i in range(3):
-        for j in range(3):
-            mesa_fabricacion[i][j] = None
-    resultado[0][0] = None

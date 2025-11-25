@@ -63,7 +63,7 @@ def main():
                     print(f"Usuario seleccionado: {nombre_usuario}")
                     menu_jugar(pantalla, fuente, fondo)
                 elif boton_opciones.collidepoint(mouse_pos):
-                    print("Opciones...")
+                    menu_opciones(pantalla, fuente, fondo)
                 elif boton_salir.collidepoint(mouse_pos):
                     pygame.quit()
                     sys.exit()
@@ -148,6 +148,58 @@ def menu_jugar(pantalla, fuente, fondo):
             texto = fuente.render(boton["nombre"], True, (255, 255, 255))
             texto_rect = texto.get_rect(center=boton["rect"].center)
             pantalla.blit(texto, texto_rect)
+
+        pygame.display.flip()
+        reloj.tick(60)
+
+def menu_opciones(pantalla, fuente, fondo):
+    reloj = pygame.time.Clock()
+    ancho, alto = pantalla.get_size()
+
+    # Fondo
+    fondo = pygame.image.load("botones y fondos/Dirt_background_BE1.png").convert()
+    fondo = pygame.transform.scale(fondo, (ancho, alto))
+
+    # Estados
+    musica_on = pygame.mixer.music.get_busy()
+
+    # Rectángulos
+    rect_musica = pygame.Rect(ancho//2 - 150, 250, 300, 60)
+    rect_volver = pygame.Rect(ancho//2 - 80, 520, 100, 45)
+
+    while True:
+        mouse_pos = pygame.mouse.get_pos()
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            elif evento.type == pygame.MOUSEBUTTONDOWN:
+                if rect_musica.collidepoint(mouse_pos):
+                    musica_on = not musica_on
+                    if musica_on:
+                        pygame.mixer.music.play(-1)
+                    else:
+                        pygame.mixer.music.stop()
+
+                elif rect_volver.collidepoint(mouse_pos):
+                    return
+
+        pantalla.blit(fondo, (0, 0))
+
+        # BOTÓN MÚSICA (ON/OFF)
+        pygame.draw.rect(pantalla, (60, 60, 60), rect_musica, border_radius=12)
+        texto = "Musica: ON" if musica_on else "Musica: OFF"
+        color = (0, 255, 0) if musica_on else (255, 50, 50)
+
+        label = fuente.render(texto, True, color)
+        pantalla.blit(label, label.get_rect(center=rect_musica.center))
+
+        # BOTÓN VOLVER
+        pygame.draw.rect(pantalla, (80, 80, 80), rect_volver, border_radius=12)
+        volver_txt = fuente.render("Volver", True, (255, 255, 255))
+        pantalla.blit(volver_txt, volver_txt.get_rect(center=rect_volver.center))
 
         pygame.display.flip()
         reloj.tick(60)

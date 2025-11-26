@@ -2,18 +2,18 @@ import pygame
 import random
 from objetos import spawnear_objetos_iniciales, OBJETOS
 
-# === MATRIZ DE INVENTARIO ===
+
 matriz_inventario = [
     [None, None, None, None, None, None, None, None, None],
     [None, None, None, None, None, None, None, None, None],
     [None, None, None, None, None, None, None, None, None]
 ]
 
-# Al iniciar el inventario, spawneamos objetos iniciales
+
 spawnear_objetos_iniciales(matriz_inventario)
 
 
-# --- FUNCIÓN PARA DIBUJAR INVENTARIO ---
+
 def dibujar_inventario(pantalla, matriz, x_inicial, y_inicial, tam_celda, item_en_mano, mouse_pos):
     """Dibuja la cuadrícula del inventario y coloca los sprites dentro de cada celda."""
     for fila in range(len(matriz)):
@@ -25,7 +25,7 @@ def dibujar_inventario(pantalla, matriz, x_inicial, y_inicial, tam_celda, item_e
             pygame.draw.rect(pantalla, (80, 80, 80), rect, 2)
 
             if matriz[fila][col] is not None:
-                # Si el slot contiene un dict (como {"nombre":..., "sprite":..., "cantidad":...})
+                
                 if isinstance(matriz[fila][col], dict):
                     sprite = matriz[fila][col]["sprite"]
                 else:
@@ -39,7 +39,7 @@ def dibujar_inventario(pantalla, matriz, x_inicial, y_inicial, tam_celda, item_e
         pantalla.blit(item_en_mano, sprite_rect)
 
 
-# --- NUEVA FUNCIÓN: PANTALLA DE MOCHILA ---
+
 def mostrar_mochila(pantalla):
     """Muestra una cuadrícula con todos los objetos disponibles para agregar al inventario."""
     reloj = pygame.time.Clock()
@@ -52,17 +52,15 @@ def mostrar_mochila(pantalla):
     espacio = 30
     ancho, alto = pantalla.get_size()
 
-    # Paginación
-    items_por_pagina = 18  # 3 filas × 6 columnas
+    
+    items_por_pagina = 18  
     pagina_actual = 0
 
     ejecutando = True
     while ejecutando:
         mouse_pos = pygame.mouse.get_pos()
 
-        # ------------------------------------------------------------------
-        # EVENTOS
-        # ------------------------------------------------------------------
+        
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 pygame.quit()
@@ -73,7 +71,6 @@ def mostrar_mochila(pantalla):
 
             elif evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
 
-                # Detectar click en flechas
                 if flecha_izq.collidepoint(mouse_pos) and pagina_actual > 0:
                     pagina_actual -= 1
                     continue
@@ -82,7 +79,7 @@ def mostrar_mochila(pantalla):
                     pagina_actual += 1
                     continue
 
-                # Click en los objetos visibles en esta página
+                
                 inicio = pagina_actual * items_por_pagina
                 fin = inicio + items_por_pagina
                 pagina_items = objetos_lista[inicio:fin]
@@ -103,20 +100,18 @@ def mostrar_mochila(pantalla):
                         ejecutando = False
                         break
 
-        # ------------------------------------------------------------------
-        # DIBUJAR PANTALLA
-        # ------------------------------------------------------------------
+        
         pantalla.fill((40, 40, 40))
 
         titulo = fuente.render("MOCHILA - Haz clic en un objeto para agregarlo", True, (255, 255, 255))
         pantalla.blit(titulo, (ancho // 2 - titulo.get_width() // 2, 50))
 
-        # Items de la página actual
+        
         inicio = pagina_actual * items_por_pagina
         fin = inicio + items_por_pagina
         pagina_items = objetos_lista[inicio:fin]
 
-        # Dibujar objetos
+        
         for i, (nombre, datos) in enumerate(pagina_items):
             fila = i // columnas
             col = i % columnas
@@ -134,16 +129,14 @@ def mostrar_mochila(pantalla):
             texto_nombre = fuente.render(nombre, True, (255, 255, 255))
             pantalla.blit(texto_nombre, (x + (tam_celda // 2 - texto_nombre.get_width() // 2), y + tam_celda + 5))
 
-        # ------------------------------------------------------------------
-        # PAGINACIÓN VISUAL
-        # ------------------------------------------------------------------
+        
         total_pag = max(1, (len(objetos_lista) - 1) // items_por_pagina + 1)
 
-        # Texto "1/5"
+        
         pag_text = fuente.render(f"{pagina_actual + 1}/{total_pag}", True, (255, 255, 255))
         pantalla.blit(pag_text, (ancho // 2 - pag_text.get_width() // 2, alto - 60))
 
-        # Flechas
+        
         flecha_izq = pygame.Rect(ancho // 2 - 70, alto - 65, 30, 30)
         flecha_der = pygame.Rect(ancho // 2 + 40, alto - 65, 30, 30)
 
@@ -153,13 +146,13 @@ def mostrar_mochila(pantalla):
         pantalla.blit(fuente.render("<", True, (0, 0, 0)), (flecha_izq.x + 8, flecha_izq.y + 2))
         pantalla.blit(fuente.render(">", True, (0, 0, 0)), (flecha_der.x + 8, flecha_der.y + 2))
 
-        # ------------------------------------------------------------------
+        
 
         pygame.display.flip()
         reloj.tick(60)
 
 
-# --- FUNCIÓN PARA AGREGAR OBJETOS AL INVENTARIO ---
+
 def agregar_a_inventario(nombre, datos):
     """Agrega un objeto a una posición vacía aleatoria del inventario."""
     posiciones_vacias = [
@@ -178,7 +171,7 @@ def agregar_a_inventario(nombre, datos):
     print(f"✅ {nombre} agregado a ({fila}, {col})")
 
 
-# --- PANTALLA PRINCIPAL DE INVENTARIO ---
+
 def pantalla_inventario(pantalla):
     reloj = pygame.time.Clock()
     tam_celda = 64
@@ -200,7 +193,7 @@ def pantalla_inventario(pantalla):
                 if evento.key == pygame.K_ESCAPE:
                     ejecutando = False
                 elif evento.key == pygame.K_m:
-                    mostrar_mochila(pantalla)  # ← abre la mochila al presionar M
+                    mostrar_mochila(pantalla)  
 
             elif evento.type == pygame.MOUSEBUTTONDOWN:
                 col = (mouse_pos[0] - x_inicial) // tam_celda

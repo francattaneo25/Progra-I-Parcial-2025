@@ -50,7 +50,7 @@ OBJETOS = {
 }
 
 
-# === FUNCIÓN PARA COLOCAR OBJETOS INICIALES EN EL INVENTARIO ===
+
 def spawnear_objetos_iniciales(matriz_inventario):
     matriz_inventario[0][0] = {"nombre": "madera", "sprite": OBJETOS["madera"]["sprite"], "cantidad": 1}
     matriz_inventario[0][1] = {"nombre": "lingote oro", "sprite": OBJETOS["lingote oro"]["sprite"], "cantidad": 1}

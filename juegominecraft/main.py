@@ -83,28 +83,28 @@ def menu_jugar(pantalla, fuente, fondo):
     reloj = pygame.time.Clock()
     ancho, alto = pantalla.get_size()
     
-    # Fondo
+    
     fondo = pygame.image.load("botones y fondos\Dirt_background_BE1.png").convert()
     fondo = pygame.transform.scale(fondo, (ancho, alto))
 
-    # Imágenes de íconos
+    
     img_fabricar = pygame.image.load("botones y fondos\Crafting_Table_JE4_BE3.png").convert_alpha()
     img_mochila = pygame.image.load("botones y fondos\mochila.jpg").convert_alpha()
     img_fabricar = pygame.transform.scale(img_fabricar, (120, 120))
     img_mochila = pygame.transform.scale(img_mochila, (120, 120))
 
-    # Imagen de botón base y hover
+    
     boton_base = pygame.image.load("botones y fondos/boton chico.png").convert_alpha()
     boton_hover = boton_base.copy()
     boton_hover.set_alpha(255)
     boton_base.set_alpha(180)
 
-    # Definir rectángulos
+    
     rect_fabricar = pygame.Rect(ancho // 2 - 240, 340, 120, 60)
     rect_objetos = pygame.Rect(ancho // 2 + 120, 340, 120, 60)
     rect_volver = pygame.Rect(ancho // 2 - 80, 520, 100, 45)
 
-    # Definir lista de botones (para evitar repetir if)
+    
     botones = [
         {"nombre": "Fabricar", "rect": rect_fabricar},
         {"nombre": "Objetos", "rect": rect_objetos},
@@ -132,14 +132,14 @@ def menu_jugar(pantalla, fuente, fondo):
                         elif boton["nombre"] == "Volver":
                             en_submenu = False
 
-        # Fondo
+        
         pantalla.blit(fondo, [0, 0])
 
-        # Dibujar íconos arriba de los botones
+        
         pantalla.blit(img_fabricar, img_fabricar.get_rect(center=(rect_fabricar.centerx, rect_fabricar.centery - 100)))
         pantalla.blit(img_mochila, img_mochila.get_rect(center=(rect_objetos.centerx, rect_objetos.centery - 100)))
 
-        # Dibujar todos los botones de forma genérica
+        
         for boton in botones:
             hover = boton["rect"].collidepoint(mouse_pos)
             imagen = boton_hover if hover else boton_base
@@ -156,14 +156,14 @@ def menu_opciones(pantalla, fuente, fondo):
     reloj = pygame.time.Clock()
     ancho, alto = pantalla.get_size()
 
-    # Fondo
+    
     fondo = pygame.image.load("botones y fondos/Dirt_background_BE1.png").convert()
     fondo = pygame.transform.scale(fondo, (ancho, alto))
 
-    # Estados
+    
     musica_on = pygame.mixer.music.get_busy()
 
-    # Rectángulos
+    
     rect_musica = pygame.Rect(ancho//2 - 150, 250, 300, 60)
     rect_volver = pygame.Rect(ancho//2 - 80, 520, 100, 45)
 
@@ -188,7 +188,7 @@ def menu_opciones(pantalla, fuente, fondo):
 
         pantalla.blit(fondo, (0, 0))
 
-        # BOTÓN MÚSICA (ON/OFF)
+        
         pygame.draw.rect(pantalla, (60, 60, 60), rect_musica, border_radius=12)
         texto = "Musica: ON" if musica_on else "Musica: OFF"
         color = (0, 255, 0) if musica_on else (255, 50, 50)
@@ -196,7 +196,7 @@ def menu_opciones(pantalla, fuente, fondo):
         label = fuente.render(texto, True, color)
         pantalla.blit(label, label.get_rect(center=rect_musica.center))
 
-        # BOTÓN VOLVER
+        
         pygame.draw.rect(pantalla, (80, 80, 80), rect_volver, border_radius=12)
         volver_txt = fuente.render("Volver", True, (255, 255, 255))
         pantalla.blit(volver_txt, volver_txt.get_rect(center=rect_volver.center))

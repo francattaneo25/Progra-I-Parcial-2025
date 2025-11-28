@@ -51,6 +51,11 @@ def receta_disponible_inventario(inventario, receta):
 
 
 def pantalla_recetario(pantalla):
+    """Crea la pantalla de recetario
+    Muestra todos los objetos con sus respectivas recetas.
+    Te muestra un tick si en tu inventario de fabricacion se encuentra ese objeto
+    Te muestra una cruz si no tenes los objetos necesarios para esa receta
+    """
     reloj = pygame.time.Clock()
     fuente = pygame.font.SysFont("Minecraft", 20)
     fuente_peq = pygame.font.SysFont("Minecraft", 16)
@@ -185,7 +190,11 @@ def pantalla_recetario(pantalla):
                 continue
 
             
-            receta_real = next((r for r in recetas if r["result"] == nombre), None)
+            receta_real = None
+            for r in recetas:
+                if r["result"] == nombre:
+                    receta_real = r
+                    break
 
             
             filtradas.append(receta_real if receta_real else {"result": nombre})

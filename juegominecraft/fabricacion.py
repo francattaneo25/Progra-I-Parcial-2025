@@ -14,7 +14,10 @@ mesa_fabricacion = [
 resultado = [[None]]
 
 def pantalla_fabricacion(pantalla):
-    """Muestra la mesa de crafteo y el inventario."""
+    """Muestra la mesa de crafteo y el inventario.
+    Ejecuta la matriz de mesa de crafteo, inventario de pantalla fabricacion, y resultado
+    Permite el arrastre de objetos y modificacion de patrones para las recetas
+    """
     reloj = pygame.time.Clock()
     fuente = pygame.font.SysFont("Minecraft", 16)
 
@@ -273,12 +276,18 @@ def pantalla_fabricacion(pantalla):
 
 
 def cargar_recetas_desde_json(ruta_archivo: str) -> list:
+    """Carga las recetas del json respetando el patron de cada receta.
+    """
     with open(ruta_archivo, "r", encoding="utf-8") as archivo:
         data = json.load(archivo)
     return data["recetas"]
 recetas = cargar_recetas_desde_json("recetas.json")
 
 def coincide_patron(patron_mesa, patron_receta):
+    """Revisa las 9 casillas del 3×3: 
+    Si TODAS son iguales entre mesa y receta: True
+    Si alguna difiere: False
+    """
     for f in range(3):
         for c in range(3):
             if patron_mesa[f][c] != patron_receta[f][c]:
@@ -286,14 +295,12 @@ def coincide_patron(patron_mesa, patron_receta):
     return True
 
 
-def fabricar_objeto(nombre_objeto: str):
-    objeto = OBJETOS.get(nombre_objeto)
-    if objeto:
-        return objeto["sprite"]
-    return None
-
-
 def verificar_receta():
+    """Construye patron_actual, una matriz 3x3 que representa solamente los nombres de los items colocados en la mesa de fabricación
+    Extrae de la receta: patron: la matriz 3x3 de ingredientes de la receta (puede contener None / null).
+    nombre_resultado: el identificador del objeto que produce la receta (ej. "mesa", "manzana_dorada").
+    Busca en el diccionario OBJETOS la entrada correspondiente al nombre_resultado. OBJETOS contiene datos por item (sprite, tipo, etc).
+    """
     patron_actual = [[celda["nombre"] if celda else None for celda in fila]
         for fila in mesa_fabricacion]
 
